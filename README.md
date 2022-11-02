@@ -1,3 +1,5 @@
+# GO_Yahtzee
+
 A Go translated version of a Yahtzee game, that was developed in Python and was refactored by Youtuber ArjanCodes.
 
 Arjan video:
