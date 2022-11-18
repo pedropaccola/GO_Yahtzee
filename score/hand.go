@@ -1,4 +1,4 @@
-package main
+package score
 
 import (
 	"fmt"
@@ -14,15 +14,18 @@ type Die struct {
 	Sides int
 }
 
-func NewDie(side, face int) *Die {
+func NewDie(side, face int) (*Die, error) {
+	if side < 1 {
+		return nil, fmt.Errorf("can't create die with %d sides", side)
+	}
 	d := &Die{
 		Sides: side,
 		Face:  face,
 	}
-	if d.Face == 0 {
+	if d.Face < 1 || d.Face > d.Sides {
 		d.Roll()
 	}
-	return d
+	return d, nil
 }
 
 func (d *Die) String() string {
@@ -33,8 +36,12 @@ func (d *Die) Roll() {
 	d.Face = rand.Intn(d.Sides) + 1
 }
 
-func (d *Die) SetFace(value int) {
+func (d *Die) SetFace(value int) error {
+	if value < 1 || value > d.Sides {
+		return fmt.Errorf("the die only have %d sides", d.Sides)
+	}
 	d.Face = value
+	return nil
 }
 
 func (d *Die) GetFace() int {
@@ -51,7 +58,10 @@ type Hand struct {
 	Dice  []*Die
 }
 
-func NewHand(qty, sides int) *Hand {
+func NewHand(qty, sides int) (*Hand, error) {
+	if qty < 1 {
+		return nil, fmt.Errorf("can't create hand with %d dice", qty)
+	}
 	h := &Hand{
 		Qty:   qty,
 		Sides: sides,
@@ -59,16 +69,20 @@ func NewHand(qty, sides int) *Hand {
 	}
 
 	for i := 0; i < h.Qty; i++ {
-		h.Dice = append(h.Dice, NewDie(sides, 0))
+		die, err := NewDie(sides, 0)
+		if err != nil {
+			return nil, err
+		}
+		h.Dice = append(h.Dice, die)
 	}
 
-	return h
+	return h, nil
 }
 
 func (h *Hand) String() string {
 	s := ""
 	for i, v := range h.Dice {
-		s += fmt.Sprintf("Die %d has value %d\n", i+1, v.GetFace())
+		s += fmt.Sprintf("Die %d ----> %d\n", i+1, v.GetFace())
 	}
 	return s
 }

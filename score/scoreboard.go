@@ -1,25 +1,30 @@
-package main
+package score 
 
 import "fmt"
 
 type Scoreboard struct {
 	Rules []Rule
 	Score []int
+	Hand *Hand
 }
 
-func NewScoreboard() 
-
-func (s *Scoreboard) RegisterRules(r []Rule) {
-	s.Rules = append(s.Rules, r...)
-	s.Score = make([]int, len(s.Rules))
+func NewScoreboard() *Scoreboard {
+	s := &Scoreboard{
+		Rules: make([]Rule, 0, int(LastRule)),
+		Score: make([]int, 0, int(LastRule)),
+	}
+	for i := 0; i < int(LastRule); i++ {
+		s.Rules = append(s.Rules, Rule(i)) 
+	}
+	return s
 }
 
 func (s *Scoreboard) Count() int {
 	return len(s.Rules)
 }
 
-func (s *Scoreboard) GetRule(r int) Rule {
-	return s.Rules[r]
+func (s *Scoreboard) GetRule(i int) Rule {
+	return s.Rules[i]
 }
 
 func (s *Scoreboard) AssignPoints(r Rule) (int, error) {
