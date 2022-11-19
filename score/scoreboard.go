@@ -1,11 +1,11 @@
-package score 
+package score
 
 import "fmt"
 
 type Scoreboard struct {
 	Rules []Rule
 	Score []int
-	Hand *Hand
+	Hand  *Hand
 }
 
 func NewScoreboard() *Scoreboard {
@@ -14,7 +14,7 @@ func NewScoreboard() *Scoreboard {
 		Score: make([]int, 0, int(LastRule)),
 	}
 	for i := 0; i < int(LastRule); i++ {
-		s.Rules = append(s.Rules, Rule(i)) 
+		s.Rules = append(s.Rules, Rule(i))
 	}
 	return s
 }
@@ -35,9 +35,9 @@ func (s *Scoreboard) AssignPoints(r Rule) (int, error) {
 		}
 	}
 	if s.Score[row] > 0 {
-		return 0, fmt.Errorf("Scoreboard for %s already saved", s.Score[row])
+		return 0, fmt.Errorf("scoreboard for %v already saved", Rule(s.Score[row]))
 	}
-	points := r.Points //calculate a rule score
+	points := 0 // r.Points //calculate a rule score
 	s.Score[row] = points
 	return points, nil
 }
@@ -50,9 +50,9 @@ func (s *Scoreboard) TotalPoints() int {
 	return sum
 }
 
-func (s *Scoreboard) PointsOverview () {
-	strs := []string{}
-	for i, v := range s.Rules {
-		if 
-	}
-}
+// func (s *Scoreboard) PointsOverview () {
+// 	strs := []string{}
+// 	for i, v := range s.Rules {
+// 		if
+// 	}
+// }

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 	"strconv"
+	"strings"
 
 	"github.com/pedropaccola/go-yahtzee/score"
 )
@@ -17,7 +17,8 @@ type Game struct {
 
 func NewGame() *Game {
 	fmt.Println()
-	fmt.Println("YAHTZEE") fmt.Println()
+	fmt.Println("YAHTZEE")
+	fmt.Println()
 	fmt.Println("Welcome to the game. To begin, simply press [Enter]")
 	fmt.Println("and follow the instructions on the screen.")
 	fmt.Println()
@@ -29,6 +30,7 @@ func NewGame() *Game {
 		fmt.Println(err)
 		return nil
 	}
+
 	s := score.NewScoreboard()
 
 	return &Game{
@@ -37,7 +39,7 @@ func NewGame() *Game {
 	}
 }
 
-func (g *Game) Play() {
+func (g *Game) Start() {
 	for i := 0; i < int(score.LastRule); i++ {
 		g.turn()
 	}
@@ -47,44 +49,71 @@ func (g *Game) Play() {
 
 func (g *Game) turn() {
 	g.clearScr()
-	rolls := 0
+
+	fmt.Println("\nRolling dice...")
+	g.Hand.Throw()
+
+	rolls := 1
 	for {
-		fmt.Println("Rolling dice...")
-		g.Hand.Throw()
 		fmt.Println(g.Hand)
-		rolls++
 
 		if rolls >= 3 {
 			break
 		}
 
-	}
-}
-
-func (g *Game) reroll() {
-	inpInt := []int{}
-	for {
-		fmt.Println("\nChoose which dice to re-roll")
-		fmt.Println("(1, 3, 5) or ('all') or (0) to continue")
-
-		input := ""
-		fmt.Scan(&input)
-
-		if strings.ToLower(input) == "all" {
-			g.Hand.Throw()
+		if !g.reroll() {
 			break
 		}
 
-		inpSlice := strings.Fields(input)
-		for i, v := range inpSlice {
-			num, err := strconv.Atoi(v)
-			if err != nil {
-				fmt.Println("Sorry, I can't understand")
-				continue
-			}
-			inpInt = append(inpInt, strconv.AtoI)
+		rolls++
+	}
+
+	g.score()
+}
+
+func (g *Game) reroll() bool {
+	inpInt := []int{}
+	fmt.Println("\nChoose which dice to re-roll")
+	fmt.Println("(1, 3, 5) or ('all') or (0) to continue")
+
+	input := ""
+	fmt.Scan(&input)
+
+	if len(input) == 0 {
+		return false
+	}
+
+	for _, v := range []byte(input) {
+		if string(v) == "0" {
+			return false
 		}
 	}
+
+	if strings.ToLower(input) == "all" {
+		g.Hand.Throw()
+		return true
+	}
+
+	// whole function needs a for loop for error handling
+	inpSlice := strings.Fields(input)
+	for _, v := range inpSlice {
+		num, err := strconv.Atoi(v)
+		if err != nil {
+			fmt.Println("Sorry, I can't understand")
+			fmt.Println("Please try again!")
+			continue
+		}
+		inpInt = append(inpInt, num)
+	}
+	if err := g.Hand.Roll(inpInt); err != nil {
+		fmt.Println(err)
+		fmt.Println("Please try again!")
+		return false
+	}
+}
+
+func (g *Game) score() {
+
 }
 
 func (g *Game) clearScr() {
@@ -93,8 +122,4 @@ func (g *Game) clearScr() {
 	c := exec.Command("cmd", "/c", "cls")
 	c.Stdout = os.Stdout
 	c.Run()
-}
-
-func (g *Game) readInput() any {
-
 }
