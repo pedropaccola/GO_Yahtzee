@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -12,9 +11,6 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	g := game.NewGame()
-
-	x := g.Scoreboard.String()
-	fmt.Println(x)
 
 	g.Start()
 }

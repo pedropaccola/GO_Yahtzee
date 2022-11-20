@@ -64,7 +64,7 @@ type Scoring struct {
 	Score int
 }
 
-func New(rule Rule, hand *Hand) (*Scoring, error) {
+func NewRule(rule Rule, hand *Hand) (*Scoring, error) {
 	s := &Scoring{
 		Rule: rule,
 		Hand: hand,

@@ -21,41 +21,47 @@ func NewScoreboard() *Scoreboard {
 	return s
 }
 
-// Fix the stringer to print the scoreboard
 func (s *Scoreboard) String() string {
 	strSlice := []string{}
-	strSlice = append(strSlice, "Scoreboard")
+	strSlice = append(strSlice, fmt.Sprintf("=%s=", strings.Repeat("=", 40)))
+	strSlice = append(strSlice, fmt.Sprintf("|| %23s %s ||", "SCOREBOARD", strings.Repeat(" ", 12)))
+	strSlice = append(strSlice, fmt.Sprintf("=%s=", strings.Repeat("=", 40)))
+	strSlice = append(strSlice, fmt.Sprintf("| %-6s | %-20s | %-6s |", "Number", "Rule", "Points"))
+	strSlice = append(strSlice, fmt.Sprintf("+%s+", strings.Repeat("-", 40)))
 
-	for _, v := range s.Rules {
-		strSlice = append(strSlice, v.String())
+	for i, v := range s.Rules {
+		str := fmt.Sprintf("| %-6d | %-20s | %-6d |", i+1, v, s.Score[i])
+		strSlice = append(strSlice, str)
 	}
+	strSlice = append(strSlice, fmt.Sprintf("=%s=", strings.Repeat("=", 40)))
 
 	output := strings.Join(strSlice, "\n")
 	return fmt.Sprintln(output)
 }
 
-// func (s *Scoreboard) Count() int {
-// 	return len(s.Rules)
-// }
+func (s *Scoreboard) GetRule(i int) Rule {
+	return s.Rules[i]
+}
 
-// func (s *Scoreboard) GetRule(i int) Rule {
-// 	return s.Rules[i]
-// }
+func (s *Scoreboard) AssignPoints(r Rule, h *Hand) (int, error) {
+	rule, err := NewRule(r, h)
+	if err != nil {
+		return 0, err
+	}
 
-// func (s *Scoreboard) AssignPoints(r Rule) (int, error) {
-// 	row := 0
-// 	for i, v := range s.Rules {
-// 		if v == r {
-// 			row = i
-// 		}
-// 	}
-// 	if s.Score[row] > 0 {
-// 		return 0, fmt.Errorf("scoreboard for %v already saved", Rule(s.Score[row]))
-// 	}
-// 	points := 0 // r.Points //calculate a rule score
-// 	s.Score[row] = points
-// 	return points, nil
-// }
+	// row := 0
+	// for i, v := range s.Rules {
+	// 	if v == r {
+	// 		row = i
+	// 	}
+	// }
+	// if s.Score[row] > 0 {
+	// 	return 0, fmt.Errorf("scoreboard for %v already saved", s.GetRule(row))
+	// }
+	// points := 0 // r.Points //calculate a rule score
+	// s.Score[row] = points
+	return 0, nil
+}
 
 func (s *Scoreboard) TotalPoints() int {
 	sum := 0
@@ -64,10 +70,3 @@ func (s *Scoreboard) TotalPoints() int {
 	}
 	return sum
 }
-
-// func (s *Scoreboard) PointsOverview () {
-// 	strs := []string{}
-// 	for i, v := range s.Rules {
-// 		if
-// 	}
-// }
