@@ -1,4 +1,4 @@
-package score 
+package score
 
 import (
 	"fmt"
@@ -24,12 +24,44 @@ const (
 	LastRule
 )
 
-type Scoring struct {
-	Hand *Hand
-	Rule Rule
+func (r Rule) String() string {
+	switch r {
+	case 0:
+		return "Aces"
+	case 1:
+		return "Twos"
+	case 2:
+		return "Threes"
+	case 3:
+		return "Fours"
+	case 4:
+		return "Fives"
+	case 5:
+		return "Sixes"
+	case 6:
+		return "Three of a Kind"
+	case 7:
+		return "Four of a Kind"
+	case 8:
+		return "Full House"
+	case 9:
+		return "Small Straight"
+	case 10:
+		return "Large Straight"
+	case 11:
+		return "Yahtzee"
+	case 12:
+		return "Chance"
+	default:
+		return "invalid scoring"
+	}
 
+}
+
+type Scoring struct {
+	Hand  *Hand
+	Rule  Rule
 	Score int
-	Name  string
 }
 
 func New(rule Rule, hand *Hand) (*Scoring, error) {
@@ -40,51 +72,34 @@ func New(rule Rule, hand *Hand) (*Scoring, error) {
 	switch rule {
 	case 0:
 		s.Aces()
-		s.Name = "Aces"
 	case 1:
 		s.Twos()
-		s.Name = "Twos"
 	case 2:
 		s.Threes()
-		s.Name = "Threes"
 	case 3:
 		s.Fours()
-		s.Name = "Fours"
 	case 4:
 		s.Fives()
-		s.Name = "Fives"
 	case 5:
 		s.Sixes()
-		s.Name = "Sixes"
 	case 6:
 		s.ThreeOfAKind()
-		s.Name = "Three of a Kind"
 	case 7:
 		s.FourOfAKind()
-		s.Name = "Four of a Kind"
 	case 8:
 		s.FullHouse()
-		s.Name = "Full House"
 	case 9:
 		s.SmallStraight()
-		s.Name = "Small Straight"
 	case 10:
 		s.LargeStraight()
-		s.Name = "Large Straight"
 	case 11:
 		s.Yahtzee()
-		s.Name = "Yahtzee"
 	case 12:
 		s.Chance()
-		s.Name = "Chance"
 	default:
 		return nil, fmt.Errorf("invalid scoring")
 	}
 	return s, nil
-}
-
-func (s *Scoring) String() string {
-	return s.Name
 }
 
 func (s *Scoring) Aces() {
