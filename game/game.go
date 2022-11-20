@@ -21,7 +21,7 @@ func NewGame() *Game {
 	if err != nil {
 		fmt.Println(err)
 		return nil
-	}
+  }	 
 
 	s := score.NewScoreboard()
 
@@ -32,6 +32,7 @@ func NewGame() *Game {
 }
 
 func (g *Game) Start() {
+  
 	fmt.Println()
 	fmt.Println("YAHTZEE")
 	fmt.Println()
@@ -127,6 +128,8 @@ InputValidation:
 	}
 }
 
+// Can register the same rule more than once
+// Change the flow to Scoreboard+Choice then ScoreboardUpdated+Continue/Quit
 func (g *Game) score() {
 	fmt.Println()
 	fmt.Println("The Scoreboard:")

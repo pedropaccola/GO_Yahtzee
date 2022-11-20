@@ -3,6 +3,8 @@ package score
 import (
 	"fmt"
 	"math/rand"
+	"sort"
+	"strconv"
 )
 
 /*
@@ -82,7 +84,7 @@ func NewHand(qty, sides int) (*Hand, error) {
 func (h *Hand) String() string {
 	s := ""
 	for i, v := range h.Dice {
-		s += fmt.Sprintf("Die %d ----> %d\n", i+1, v.GetFace())
+		s += fmt.Sprintf("D%d = %d\n", i+1, v.GetFace())
 	}
 	return s
 }
@@ -128,6 +130,19 @@ func (h *Hand) GetHand() []int {
 		f = append(f, die.GetFace())
 	}
 	return f
+}
+
+func (h *Hand) GetHandString() string {
+	str := ""
+	hd := h.GetHand()
+	sort.Ints(hd)
+	for i, v := range hd {
+		if i != 0 {
+			str += ", "
+		}
+		str += strconv.Itoa(v)
+	}
+	return str
 }
 
 func (h *Hand) Count(i int) int {

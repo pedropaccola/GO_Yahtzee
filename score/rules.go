@@ -136,16 +136,15 @@ func (s *Scoring) FourOfAKind() {
 
 func (s *Scoring) FullHouse() {
 	m := make(map[int]int)
-	for i := 1; i <= 6; i++ {
-		m[i]++
-	}
 	two := false
 	three := false
-	for _, v := range m {
-		if v == 2 {
+
+	for _, v := range s.Hand.GetHand() {
+		m[v]++
+		if m[v] == 2 {
 			two = true
 		}
-		if v == 3 {
+		if m[v] == 3 {
 			three = true
 		}
 	}
@@ -156,8 +155,18 @@ func (s *Scoring) FullHouse() {
 
 func (s *Scoring) SmallStraight() {
 	l := s.Hand.GetHand()
-	sort.Ints(l)
-	if s.IsStraight(l[:4]) || s.IsStraight(l[1:]) {
+	l2 := make([]int, 4)
+	l3 := make([]int, 4)
+
+	a := copy(l2, l[:4])
+	b := copy(l3, l[1:])
+	if a == 0 || b == 0 {
+		return
+	}
+	sort.Ints(l2)
+	sort.Ints(l3)
+
+	if s.IsStraight(l2) || s.IsStraight(l3) {
 		s.Score = 30
 	}
 }
